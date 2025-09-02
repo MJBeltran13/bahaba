@@ -32,15 +32,19 @@ export default function Home() {
   const [readings, setReadings] = useState<Reading[]>([]);
 
   useEffect(() => {
-    // Mock data: seed four time buckets and update every 10 seconds
+    // Fetch live weather from API and seed readings
     const now = Date.now();
-    setWeather({
-      timestamp: now,
-      temperatureC: 28.2,
-      humidityPct: 67,
-      windKph: 12,
-      rainMm: 0.4,
-    });
+    const fetchWeather = async () => {
+      try {
+        const res = await fetch('/api/weather', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed');
+        const w: Weather = await res.json();
+        setWeather(w);
+      } catch (e) {
+        // keep previous weather on failure
+      }
+    };
+    fetchWeather();
 
     const gates = ["north", "south", "east"] as const;
     const seed: Reading[] = [];
@@ -65,13 +69,25 @@ export default function Home() {
         return { timestamp: ts, gateId: g, level, risk };
       });
       setReadings((curr) => [...updates, ...curr].slice(0, 180));
-      setWeather((w) => (w ? { ...w, timestamp: ts, temperatureC: w.temperatureC + (Math.random() - 0.5) * 0.4 } : null));
+      // refresh weather every 10 seconds alongside readings
+      fetchWeather();
     }, 10000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   const recent = useMemo(() => readings[0], [readings]);
+
+  const weatherEmoji = useMemo(() => {
+    if (!weather) return "⛅";
+    const r = weather.rainMm;
+    if (r >= 10) return "⛈️"; // thunderstorm / heavy rain
+    if (r >= 2) return "🌧️"; // rain
+    if (r > 0) return "🌦️";  // light rain / showers
+    return "⛅";               // partly cloudy / no rain
+  }, [weather]);
 
   const chartData = useMemo(() => {
     const byTime = new Map<number, { label: string; gate1Out?: number; gate1In?: number; gate3Out?: number }>();
@@ -145,7 +161,7 @@ export default function Home() {
                   <div className={styles.muted}>Loading...</div>
                 )}
               </div>
-              <div className={styles.weatherEmoji}>⛅</div>
+              <div className={styles.weatherEmoji}>{weatherEmoji}</div>
             </div>
           </div>
 
@@ -162,7 +178,7 @@ export default function Home() {
                 <span>13-19 INCHES</span>
               </div>
               <div className={`${styles.riskPill} ${styles.pillLow}`}>
-                <span className={styles.pillLowLeft}>{riskLabel.toUpperCase()}</span>
+                <span className={styles.pillLowLeft}>LOW</span>
                 <span className={styles.pillLowRight}>8-12 INCHES</span>
               </div>
             </div>

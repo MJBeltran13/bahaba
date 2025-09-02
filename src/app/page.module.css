@@ -1,0 +1,448 @@
+.riskCard {
+  background: var(--brand-primary);
+  padding: 14px 16px 12px 16px;
+}
+
+.riskHeaderRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.riskPills {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 10px;
+}
+
+.riskPill {
+  background: #00000022;
+  border-radius: 999px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-weight: 600;
+}
+
+/* Right-align text for the first two pills */
+.riskPill:not(.pillLow) span {
+  width: 100%;
+  text-align: right;
+}
+
+.pillHigh {
+  background: var(--red-600);
+}
+
+.pillMedium {
+  background: var(--yellow-400);
+  color: #1a1a1a;
+}
+
+.pillLow {
+  background: var(--green-600);
+  color: #fff;
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.pillLowLeft {
+  font-size: 24px;
+  font-weight: 900;
+  justify-self: start;
+}
+
+.pillLowRight {
+  align-self: center;
+  justify-self: end;
+  opacity: 0.9;
+}
+.page {
+  --gray-rgb: 0, 0, 0;
+  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
+  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
+
+  --button-primary-hover: #383838;
+  --button-secondary-hover: #f2f2f2;
+
+  display: grid;
+  grid-template-rows: 20px 1fr 20px;
+  align-items: center;
+  justify-items: center;
+  min-height: 100svh;
+  padding: 80px;
+  gap: 64px;
+  font-family: var(--font-geist-sans);
+}
+.brandTopRight {
+  position: fixed;
+  top: 12px;
+  left: 96px; /* offset to clear left ribbon */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 20;
+}
+
+.brandLogo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: grayscale(30%);
+}
+
+.brandText { display: flex; flex-direction: column; line-height: 1; }
+.brandTitle { font-weight: 800; color: var(--brand-secondary); letter-spacing: 1px; font-size: 32px; }
+.brandSubtitle { font-size: 20px; color: #333; letter-spacing: 1px; }
+
+@media (max-width: 600px) {
+  .brandTopRight { left: 64px; gap: 8px; }
+  .brandLogo { width: 52px; height: 52px; }
+  .brandTitle { font-size: 22px; }
+  .brandSubtitle { font-size: 16px; }
+}
+
+.cornerRightLogo {
+  position: fixed;
+  top: -12px;
+  right: 16px;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  z-index: 20;
+}
+
+@media (max-width: 600px) {
+  .cornerRightLogo { width: 88px; height: 88px; right: 12px; }
+}
+
+/* Offset main content so it doesn't hide behind the left ribbon */
+.page { padding-left: 156px; }
+
+.leftRibbon {
+  position: fixed;
+  top: 0;
+  left: 8px;
+  bottom: 0;
+  width: 72px;
+  background: var(--brand-secondary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 24px 0;
+  gap: 12px;
+  text-align: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-weight: 700;
+  letter-spacing: 2px;
+  z-index: 10;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+  border-top-left-radius: 24px;
+  border-bottom-left-radius: 24px;
+  transform: rotate(180deg);
+  transform-origin: center;
+}
+
+.leftRibbonMain {
+  font-size: 14px;
+  font-family: var(--font-cinzel-decorative);
+}
+
+.leftRibbonSub {
+  font-weight: 500;
+  font-size: 10px;
+  opacity: 0.9;
+  letter-spacing: 1px;
+  font-family: var(--font-cinzel-decorative);
+}
+
+@media (max-width: 800px) {
+  .leftRibbon {
+    width: 56px;
+    padding: 16px 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .page {
+    --gray-rgb: 255, 255, 255;
+    --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
+    --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
+
+    --button-primary-hover: #ccc;
+    --button-secondary-hover: #1a1a1a;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  grid-row-start: 2;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.main ol {
+  font-family: var(--font-cinzel-decorative);
+  padding-left: 0;
+  margin: 0;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  list-style-position: inside;
+}
+
+.main li:not(:last-of-type) {
+  margin-bottom: 8px;
+}
+
+.main code {
+  font-family: inherit;
+  background: var(--gray-alpha-100);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.ctas {
+  display: flex;
+  gap: 16px;
+}
+
+.ctas a {
+  appearance: none;
+  border-radius: 128px;
+  height: 48px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+a.primary {
+  background: var(--foreground);
+  color: var(--background);
+  gap: 8px;
+}
+
+a.secondary {
+  border-color: var(--gray-alpha-200);
+  min-width: 158px;
+}
+
+.footer {
+  grid-row-start: 3;
+  display: flex;
+  gap: 24px;
+}
+
+.footer a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer img {
+  flex-shrink: 0;
+}
+
+/* Enable hover only on non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+  a.primary:hover {
+    background: var(--button-primary-hover);
+    border-color: transparent;
+  }
+
+  a.secondary:hover {
+    background: var(--button-secondary-hover);
+    border-color: transparent;
+  }
+
+  .footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 32px;
+    padding-left: 96px; /* 32px base + ~56px ribbon */
+    padding-bottom: 80px;
+  }
+
+  .main {
+    align-items: center;
+  }
+
+  .main ol {
+    text-align: center;
+  }
+
+  .ctas {
+    flex-direction: column;
+  }
+
+  .ctas a {
+    font-size: 14px;
+    height: 40px;
+    padding: 0 16px;
+  }
+
+  a.secondary {
+    min-width: auto;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo {
+    filter: invert();
+  }
+}
+
+.headerRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.card {
+  background: var(--brand-secondary);
+  color: #fff;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.cardHeader {
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pinIcon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1px rgba(0,0,0,0.2));
+}
+
+.weatherTitle {
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.locationLine {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.weatherCard {
+  text-align: left;
+}
+
+.weatherBody {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.weatherEmoji {
+  font-size: 64px;
+}
+
+.weatherDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.weatherStats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.riskBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.riskBar {
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-weight: 600;
+}
+
+.riskHigh { background: var(--red-600); }
+.riskMedium { background: var(--yellow-400); color: #1a1a1a; }
+.riskLow { background: var(--green-600); }
+
+.muted { opacity: 0.8; }
+
+.chartBlock {
+  background: var(--surface-muted);
+  border-radius: 16px;
+  padding: 12px 16px 4px 16px;
+}
+
+.legendRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 8px 4px;
+}
+
+.legendDot1, .legendDot2, .legendDot3 {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 8px 0 16px;
+}
+.legendDot1 { background: var(--brand-secondary); }
+.legendDot2 { background: var(--red-500); }
+.legendDot3 { background: #2d2d2d; }
+
+.chartContainer { width: 100%; height: 260px; }
+
+.chartLabels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  font-size: 12px;
+  color: #555;
+  padding: 4px 8px 8px 8px;
+}
+
+@media (max-width: 800px) {
+  .headerRow { grid-template-columns: 1fr; }
+}

@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:local": "node scripts/seed-local.mjs"
   },
   "dependencies": {
     "firebase": "^12.2.1",

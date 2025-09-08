@@ -1,0 +1,58 @@
+{
+  "readings": [
+    {
+      "timestamp": 1709913600000,
+      "gateId": "north",
+      "level": 18.5,
+      "risk": "low"
+    },
+    {
+      "timestamp": 1709913600000,
+      "gateId": "south",
+      "level": 15.2,
+      "risk": "low"
+    },
+    {
+      "timestamp": 1709913600000,
+      "gateId": "east",
+      "level": 16.8,
+      "risk": "low"
+    },
+    {
+      "timestamp": 1709917200000,
+      "gateId": "north",
+      "level": 22.3,
+      "risk": "medium"
+    },
+    {
+      "timestamp": 1709917200000,
+      "gateId": "south",
+      "level": 19.7,
+      "risk": "low"
+    },
+    {
+      "timestamp": 1709917200000,
+      "gateId": "east",
+      "level": 20.5,
+      "risk": "medium"
+    },
+    {
+      "timestamp": 1709920800000,
+      "gateId": "north",
+      "level": 35.1,
+      "risk": "high"
+    },
+    {
+      "timestamp": 1709920800000,
+      "gateId": "south",
+      "level": 28.4,
+      "risk": "medium"
+    },
+    {
+      "timestamp": 1709920800000,
+      "gateId": "east",
+      "level": 31.2,
+      "risk": "medium"
+    }
+  ]
+}

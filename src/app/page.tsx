@@ -1,6 +1,7 @@
 "use client";
 import styles from "./page.module.css";
 import { useEffect, useMemo, useState } from "react";
+import { subscribeToReadings } from "@/lib/firebaseClient";
 import {
   LineChart,
   Line,
@@ -32,8 +33,7 @@ export default function Home() {
   const [readings, setReadings] = useState<Reading[]>([]);
 
   useEffect(() => {
-    // Fetch live weather from API and seed readings
-    const now = Date.now();
+    // Fetch live weather and readings from APIs
     const fetchWeather = async () => {
       try {
         const res = await fetch('/api/weather', { cache: 'no-store' });
@@ -44,37 +44,32 @@ export default function Home() {
         // keep previous weather on failure
       }
     };
+
+    // Subscribe to readings from Realtime Database
+    let unsubscribe = subscribeToReadings(
+      (list) => {
+        console.log('Realtime Database data received:', {
+          count: list.length,
+          latestReading: list[0],
+          allReadings: list
+        });
+        setReadings(list);
+      },
+      (error) => {
+        console.error('Realtime Database error:', error);
+      }
+    );
+
     fetchWeather();
 
-    const gates = ["north", "south", "east"] as const;
-    const seed: Reading[] = [];
-    for (let i = 3; i >= 0; i--) {
-      const ts = now - i * 30 * 60 * 1000;
-      gates.forEach((g, gi) => {
-        const base = 12 + gi * 8 + Math.max(0, 25 - i * 6) + (gi === 0 ? i * 3 : 0);
-        const level = Math.max(5, base + (Math.random() - 0.5) * 3);
-        const risk: Reading["risk"] = level > 32 ? "high" : level > 20 ? "medium" : "low";
-        seed.push({ timestamp: ts, gateId: g, level, risk });
-      });
-    }
-    setReadings(seed);
-
     const interval = setInterval(() => {
-      const ts = Date.now();
-      const updates: Reading[] = gates.map((g, gi) => {
-        const prev = seed.filter((r) => r.gateId === g).slice(-1)[0];
-        const jitter = (Math.random() - 0.5) * 4;
-        const level = Math.max(5, (prev?.level ?? 20) + jitter);
-        const risk: Reading["risk"] = level > 32 ? "high" : level > 20 ? "medium" : "low";
-        return { timestamp: ts, gateId: g, level, risk };
-      });
-      setReadings((curr) => [...updates, ...curr].slice(0, 180));
-      // refresh weather every 10 seconds alongside readings
+      // refresh weather every 10 seconds
       fetchWeather();
     }, 10000);
 
     return () => {
       clearInterval(interval);
+      if (unsubscribe) unsubscribe();
     };
   }, []);
 
@@ -131,7 +126,7 @@ export default function Home() {
         {/* Logo and titles at the upper-right */}
         <img src="/logobaha.jpg" alt="Logo" className={styles.brandLogo} />
         <div className={styles.brandText}>
-          <div className={styles.brandTitle}>H2OBERVER</div>
+          <div className={styles.brandTitle}>H2OBSERVER</div>
           <div className={styles.brandSubtitle}>A HELP TO OBESERVE</div>
         </div>
       </div>

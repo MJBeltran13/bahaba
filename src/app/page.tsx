@@ -50,7 +50,19 @@ export default function Home() {
       (list) => {
         console.log('Realtime Database data received:', {
           count: list.length,
-          latestReading: list[0],
+          latestReading: {
+            ...list[0],
+            readableTime: new Date(list[0].timestamp).toLocaleString()
+          },
+          currentLevels: {
+            north: list.find(r => r.gateId === 'north' && r.timestamp === list[0].timestamp)?.level,
+            south: list.find(r => r.gateId === 'south' && r.timestamp === list[0].timestamp)?.level,
+            east: list.find(r => r.gateId === 'east' && r.timestamp === list[0].timestamp)?.level,
+          },
+          timePoints: [...new Set(list.map(r => r.timestamp))].map(ts => ({
+            timestamp: ts,
+            readableTime: new Date(ts).toLocaleString()
+          })),
           allReadings: list
         });
         setReadings(list);
@@ -88,11 +100,10 @@ export default function Home() {
     const byTime = new Map<number, { label: string; gate1Out?: number; gate1In?: number; gate3Out?: number }>();
     const now = Date.now();
     const labelFor = (ts: number) => {
-      const mins = Math.round((now - ts) / 60000);
-      if (mins <= 1) return "RECENT";
-      if (mins <= 40) return "30 MINS AGO";
-      if (mins <= 75) return "60 MINS AGO";
-      return "90 MINS AGO";
+      const date = new Date(ts);
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
     };
 
     const nameFor = (gateId: string) => {
@@ -110,9 +121,10 @@ export default function Home() {
       byTime.set(key, ex);
     }
 
+    // Get entries and sort by timestamp (oldest to newest)
     const arr = Array.from(byTime.entries())
-      .sort((a, b) => a[0] - b[0])
-      .slice(-4)
+      .sort((a, b) => a[0] - b[0])  // Sort ascending by timestamp
+      .slice(-9)  // Take last 9 readings
       .map(([, v]) => v);
     return arr;
   }, [readings]);
@@ -166,11 +178,13 @@ export default function Home() {
               <span>RECENT: {recentLevel.toFixed(0)} INCHES</span>
             </div>
             <div className={styles.riskPills}>
-              <div className={`${styles.riskPill} ${styles.pillHigh}`}>
-                <span>20 INCHES AND ABOVE</span>
+              <div className={`${styles.riskPill} ${styles.pillDanger}`}>
+                <span className={styles.pillDangerLeft}>DANGER</span>
+                <span className={styles.pillDangerRight}>20 INCHES AND ABOVE</span>
               </div>
-              <div className={`${styles.riskPill} ${styles.pillMedium}`}>
-                <span>13-19 INCHES</span>
+              <div className={`${styles.riskPill} ${styles.pillWarning}`}>
+                <span className={styles.pillWarningLeft}>WARNING</span>
+                <span className={styles.pillWarningRight}>13-19 INCHES</span>
               </div>
               <div className={`${styles.riskPill} ${styles.pillLow}`}>
                 <span className={styles.pillLowLeft}>LOW</span>
@@ -199,12 +213,6 @@ export default function Home() {
                 <Line type="monotone" dataKey="gate3Out" name="Gate 3 (Outside)" stroke="#2d2d2d" strokeWidth={3} dot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
-          </div>
-          <div className={styles.chartLabels}>
-            <span>90 MINS AGO</span>
-            <span>60 MINS AGO</span>
-            <span>30 MINS AGO</span>
-            <span>RECENT</span>
           </div>
         </div>
       </main>

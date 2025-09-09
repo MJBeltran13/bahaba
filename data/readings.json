@@ -1,58 +1,67 @@
 {
   "readings": [
     {
-      "timestamp": 1709913600000,
+      "id": "reading_1",
+      "timestamp": 1710115200000,
       "gateId": "north",
-      "level": 18.5,
+      "level": 12.5,
       "risk": "low"
     },
     {
-      "timestamp": 1709913600000,
+      "id": "reading_2",
+      "timestamp": 1710115200000,
       "gateId": "south",
-      "level": 15.2,
+      "level": 11.8,
       "risk": "low"
     },
     {
-      "timestamp": 1709913600000,
+      "id": "reading_3",
+      "timestamp": 1710115200000,
       "gateId": "east",
+      "level": 10.2,
+      "risk": "low"
+    },
+    {
+      "id": "reading_4",
+      "timestamp": 1710118800000,
+      "gateId": "north",
+      "level": 14.3,
+      "risk": "low"
+    },
+    {
+      "id": "reading_5",
+      "timestamp": 1710118800000,
+      "gateId": "south",
+      "level": 13.7,
+      "risk": "low"
+    },
+    {
+      "id": "reading_6",
+      "timestamp": 1710118800000,
+      "gateId": "east",
+      "level": 12.9,
+      "risk": "low"
+    },
+    {
+      "id": "reading_7",
+      "timestamp": 1710122400000,
+      "gateId": "north",
       "level": 16.8,
       "risk": "low"
     },
     {
-      "timestamp": 1709917200000,
-      "gateId": "north",
-      "level": 22.3,
-      "risk": "medium"
-    },
-    {
-      "timestamp": 1709917200000,
+      "id": "reading_8",
+      "timestamp": 1710122400000,
       "gateId": "south",
-      "level": 19.7,
+      "level": 15.5,
       "risk": "low"
     },
     {
-      "timestamp": 1709917200000,
+      "id": "reading_9",
+      "timestamp": 1710122400000,
       "gateId": "east",
-      "level": 20.5,
-      "risk": "medium"
-    },
-    {
-      "timestamp": 1709920800000,
-      "gateId": "north",
-      "level": 35.1,
-      "risk": "high"
-    },
-    {
-      "timestamp": 1709920800000,
-      "gateId": "south",
-      "level": 28.4,
-      "risk": "medium"
-    },
-    {
-      "timestamp": 1709920800000,
-      "gateId": "east",
-      "level": 31.2,
-      "risk": "medium"
+      "level": 14.7,
+      "risk": "low"
     }
   ]
 }

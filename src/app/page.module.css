@@ -97,13 +97,13 @@
   --button-secondary-hover: #f2f2f2;
 
   display: grid;
-  grid-template-rows: 20px 1fr 20px;
+  grid-template-rows: 1fr; /* remove extra header/footer rows to save space */
   align-items: center;
   justify-items: center;
   min-height: 100svh;
-  padding: 80px;
-  gap: 64px;
-  font-family: var(--font-geist-sans);
+  padding: 48px; /* reduced to avoid vertical overflow */
+  gap: 24px; /* tighter vertical spacing */
+  font-family: var(--font-poppins);
 }
 .brandTopRight {
   position: fixed;
@@ -127,6 +127,9 @@
 .brandSubtitle { font-size: 20px; color: #333; letter-spacing: 1px; }
 
 @media (max-width: 600px) {
+  .main {
+    align-items: center;
+  }
   .brandTopRight { left: 64px; gap: 8px; }
   .brandLogo { width: 52px; height: 52px; }
   .brandTitle { font-size: 22px; }
@@ -149,6 +152,24 @@
 
 /* Offset main content so it doesn't hide behind the left ribbon */
 .page { padding-left: 156px; }
+
+@media (max-width: 800px) {
+  .page {
+    padding-left: 88px; /* 56px ribbon + 32px base padding */
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding-left: 80px; /* 48px ribbon + 32px base padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding-left: 32px; /* No ribbon, just base padding */
+  }
+}
 
 .leftRibbon {
   position: fixed;
@@ -180,7 +201,7 @@
 
 .leftRibbonMain {
   font-size: 14px;
-  font-family: var(--font-cinzel-decorative);
+  font-family: var(--font-poppins);
   letter-spacing: 12px;
   word-spacing: 4px;
 }
@@ -190,7 +211,7 @@
   font-size: 12px;
   opacity: 0.9;
   letter-spacing: 2px;
-  font-family: var(--font-cinzel-decorative);
+  font-family: var(--font-poppins);
 }
 
 @media (max-width: 800px) {
@@ -198,6 +219,81 @@
     width: 56px;
     padding: 16px 0;
   }
+}
+
+@media (max-width: 600px) {
+  .leftRibbon {
+    width: 48px;
+    padding: 12px 0;
+    font-size: 11px;
+  }
+
+  .leftRibbonMain {
+    font-size: 12px;
+    letter-spacing: 8px;
+  }
+
+  .leftRibbonSub {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leftRibbon {
+    display: none;
+  }
+
+  .page {
+    padding-left: 0 !important;
+    padding-top: 16px; /* smaller top padding on very small screens */
+    padding-bottom: 16px; /* smaller bottom padding */
+  }
+
+  .chartContainer {
+    height: 180px;
+  }
+
+  .legendRow {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .chartLabels {
+    font-size: 9px;
+    padding: 2px 4px 6px 4px;
+  }
+}
+
+/* Extra-tight layout for very small screens */
+@media (max-width: 480px) {
+  /* Brand cluster */
+  .brandTopRight { left: 16px; top: 8px; gap: 6px; }
+  .brandLogo { width: 44px; height: 44px; }
+  .brandTitle { font-size: 18px; }
+  .brandSubtitle { font-size: 12px; }
+
+  .cornerRightLogo { width: 72px; height: 72px; right: 8px; top: 0; }
+
+  /* Page padding */
+  .page { padding: 16px; padding-bottom: 16px; }
+
+  /* Cards and grid */
+  .headerRow { gap: 12px; }
+  .card { padding: 14px; border-radius: 14px; min-height: 140px; }
+  .cardHeader { margin-bottom: 6px; }
+
+  /* Weather */
+  .weatherEmoji { font-size: 36px; }
+  .weatherStats { font-size: 12px; gap: 6px; flex-direction: column; }
+  .locationLine { font-size: 10px; }
+
+  /* Risk */
+  .riskHeaderRow { grid-template-columns: 1fr; row-gap: 4px; font-size: 13px; }
+  .riskPills { gap: 8px; }
+  .riskPill { min-height: 34px; padding: 8px 12px; font-size: 12px; }
+  .pillDangerLeft, .pillWarningLeft, .pillLowLeft { font-size: 16px; }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -215,7 +311,6 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  grid-row-start: 2;
   width: 100%;
   max-width: 1000px;
 }
@@ -264,6 +359,8 @@
   font-size: 16px;
   line-height: 20px;
   font-weight: 500;
+  min-width: 44px; /* Minimum touch target size */
+  min-height: 44px; /* Minimum touch target size */
 }
 
 a.primary {
@@ -314,12 +411,13 @@ a.secondary {
 @media (max-width: 600px) {
   .page {
     padding: 32px;
-    padding-left: 96px; /* 32px base + ~56px ribbon */
+    padding-left: 80px; /* 48px ribbon + 32px base padding */
     padding-bottom: 80px;
   }
 
   .main {
     align-items: center;
+    gap: 20px;
   }
 
   .main ol {
@@ -328,12 +426,15 @@ a.secondary {
 
   .ctas {
     flex-direction: column;
+    gap: 12px; /* Increased gap for better touch targets */
   }
 
   .ctas a {
     font-size: 14px;
-    height: 40px;
+    height: 44px; /* Minimum touch target height */
     padding: 0 16px;
+    min-width: 44px; /* Minimum touch target width */
+    min-height: 44px; /* Ensure minimum touch target */
   }
 
   a.secondary {
@@ -472,9 +573,9 @@ a.secondary {
 .legendDot2 { background: var(--red-500); }
 .legendDot3 { background: #2d2d2d; }
 
-.chartContainer { 
-  width: 100%; 
-  height: 260px; 
+.chartContainer {
+  width: 100%;
+  height: min(260px, 28vh); /* cap by viewport height to avoid overflow */
 }
 
 .chartLabels {
@@ -486,51 +587,58 @@ a.secondary {
 }
 
 @media (max-width: 800px) {
-  .headerRow { 
-    grid-template-columns: 1fr; 
+  .headerRow {
+    grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .card {
     min-height: 180px;
     padding: 20px;
   }
-  
+
+  .weatherBody {
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .weatherEmoji {
     font-size: 48px;
+    align-self: flex-start;
   }
-  
+
   .weatherStats {
     font-size: 13px;
     gap: 8px;
+    align-self: stretch;
   }
-  
+
   .riskPills {
     gap: 12px;
   }
-  
+
   .riskPill {
     min-height: 40px;
     padding: 10px 16px;
   }
-  
+
   .pillLowLeft {
     font-size: 20px;
   }
-  
+
   .chartBlock {
     padding: 16px 20px 8px 20px;
   }
-  
+
   .chartContainer {
     height: 220px;
   }
-  
+
   .legendRow {
     gap: 12px;
     font-size: 13px;
   }
-  
+
   .chartLabels {
     font-size: 11px;
     padding: 6px 10px 10px 10px;
@@ -540,7 +648,7 @@ a.secondary {
 @media (max-width: 600px) {
   .page {
     padding: 32px;
-    padding-left: 96px; /* 32px base + ~56px ribbon */
+    padding-left: 80px; /* 48px ribbon + 32px base padding */
     padding-bottom: 80px;
   }
 
@@ -561,57 +669,134 @@ a.secondary {
     min-height: 160px;
     padding: 16px;
   }
-  
+
+  .cardHeader {
+    margin-bottom: 8px;
+  }
+
+  .weatherTitle {
+    font-size: 18px;
+  }
+
   .weatherEmoji {
     font-size: 40px;
   }
-  
+
   .weatherStats {
     font-size: 12px;
     gap: 6px;
     flex-direction: column;
   }
-  
+
+  .locationLine {
+    font-size: 11px;
+  }
+
+  .riskHeaderRow {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
   .riskPills {
     gap: 10px;
   }
-  
+
   .riskPill {
     min-height: 36px;
     padding: 8px 12px;
     font-size: 13px;
   }
-  
+
   .pillLowLeft {
     font-size: 18px;
   }
-  
+
   .chartBlock {
     padding: 12px 16px 6px 16px;
   }
-  
+
   .chartContainer {
     height: 200px;
   }
-  
+
   .legendRow {
-    gap: 8px;
-    font-size: 12px;
+    gap: 6px;
+    font-size: 11px;
+    padding: 4px 4px;
+    flex-wrap: nowrap;         /* keep items on one line */
+    white-space: nowrap;       /* prevent text wrapping */
+    overflow-x: auto;          /* allow horizontal scroll if needed */
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
   }
-  
+
+  .legendDot1, .legendDot2, .legendDot3 {
+    width: 8px;
+    height: 8px;
+    margin: 0 6px 0 12px;
+  }
+
   .chartLabels {
     font-size: 10px;
     padding: 4px 8px 8px 8px;
   }
 
+  .chartContainer .recharts-legend-wrapper {
+    padding-top: 8px !important;
+  }
+
+  .chartContainer :global(.recharts-legend-wrapper) {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  /* Keep Recharts legend on one line on small screens */
+  .chartContainer :global(.recharts-default-legend) {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    white-space: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: center !important;
+    align-items: center;
+    text-align: center !important;
+    padding: 4px 0 !important;
+    margin: 0 !important;
+  }
+
+  .chartContainer :global(.recharts-default-legend .recharts-legend-item) {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    margin: 0 !important;
+  }
+
+  .chartContainer :global(.recharts-default-legend .recharts-surface) {
+    width: 12px !important;
+    height: 12px !important;
+    margin: 0 !important;
+    vertical-align: middle;
+  }
+
+  .chartContainer :global(.recharts-default-legend .recharts-legend-item-text) {
+    font-size: 11px !important;
+    line-height: 1;
+    display: inline-block;
+  }
+
   .ctas {
     flex-direction: column;
+    gap: 12px; /* Increased gap for better touch targets */
   }
 
   .ctas a {
     font-size: 14px;
-    height: 40px;
+    height: 44px; /* Minimum touch target height */
     padding: 0 16px;
+    min-width: 44px; /* Minimum touch target width */
+    min-height: 44px; /* Ensure minimum touch target */
   }
 
   a.secondary {

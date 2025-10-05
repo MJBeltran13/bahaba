@@ -97,7 +97,12 @@ export default function Home() {
   }, [weather]);
 
   const chartData = useMemo(() => {
-    const byTime = new Map<number, { label: string; gate1Out?: number; gate1In?: number; gate3Out?: number }>();
+    const byTime = new Map<number, {
+      label: string;
+      gate1Out?: number; gate1OutRisk?: "low" | "medium" | "high";
+      gate1In?: number;  gate1InRisk?: "low" | "medium" | "high";
+      gate3Out?: number; gate3OutRisk?: "low" | "medium" | "high";
+    }>();
     const now = Date.now();
     const labelFor = (ts: number) => {
       const date = new Date(ts);
@@ -107,9 +112,9 @@ export default function Home() {
     };
 
     const nameFor = (gateId: string) => {
-      if (gateId === "north") return "gate1Out";
-      if (gateId === "south") return "gate1In";
-      if (gateId === "east") return "gate3Out";
+      if (gateId === "north") return "gate1Out" as const;
+      if (gateId === "south") return "gate1In" as const;
+      if (gateId === "east") return "gate3Out" as const;
       return undefined;
     };
 
@@ -117,7 +122,10 @@ export default function Home() {
       const key = Math.floor(r.timestamp / 60000) * 60000;
       const ex = byTime.get(key) ?? { label: labelFor(r.timestamp) } as any;
       const name = nameFor(r.gateId);
-      if (name) (ex as any)[name] = r.level;
+      if (name) {
+        (ex as any)[name] = r.level;
+        (ex as any)[`${name}Risk`] = r.risk;
+      }
       byTime.set(key, ex);
     }
 
@@ -131,6 +139,20 @@ export default function Home() {
 
   const recentLevel = recent?.level ?? 0;
   const riskLabel = recent?.risk ?? "low";
+
+  const RiskDot = (props: any & { riskKey: string }) => {
+    const { cx, cy, payload, riskKey } = props;
+    const risk = payload?.[riskKey] as ("low" | "medium" | "high" | undefined);
+    const fill = risk === "high"
+      ? "var(--red-600)"
+      : risk === "medium"
+      ? "var(--yellow-400)"
+      : "var(--green-600)";
+    if (cx == null || cy == null) return null;
+    return (
+      <circle cx={cx} cy={cy} r={4} fill={fill} stroke="#00000022" strokeWidth={1} />
+    );
+  };
 
   return (
     <div className={styles.page}>
@@ -208,9 +230,9 @@ export default function Home() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="gate1Out" name="Gate 1 (Outside)" stroke="var(--brand-secondary)" strokeWidth={3} dot={{ r: 4 }} />
-                <Line type="monotone" dataKey="gate1In" name="Gate 1 (Inside)" stroke="var(--red-500)" strokeWidth={3} dot={{ r: 4 }} />
-                <Line type="monotone" dataKey="gate3Out" name="Gate 3 (Outside)" stroke="#2d2d2d" strokeWidth={3} dot={{ r: 4 }} />
+                <Line type="monotone" dataKey="gate1Out" name="Gate 1 (Outside)" stroke="var(--brand-secondary)" strokeWidth={3} dot={<RiskDot riskKey="gate1OutRisk" />} />
+                <Line type="monotone" dataKey="gate1In" name="Gate 1 (Inside)" stroke="var(--red-500)" strokeWidth={3} dot={<RiskDot riskKey="gate1InRisk" />} />
+                <Line type="monotone" dataKey="gate3Out" name="Gate 3 (Outside)" stroke="#2d2d2d" strokeWidth={3} dot={<RiskDot riskKey="gate3OutRisk" />} />
               </LineChart>
             </ResponsiveContainer>
           </div>

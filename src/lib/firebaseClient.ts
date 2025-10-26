@@ -32,7 +32,7 @@ export function getRealtimeDb() {
   return getDatabase(firebaseApp);
 }
 
-export function subscribeToReadings(callback: (readings: any[]) => void, errorCallback?: (error: Error) => void) {
+export function subscribeToReadings(callback: (readings: Array<{ id?: string; timestamp: number; gateId: string; level: number; risk: "low" | "medium" | "high" }>) => void, errorCallback?: (error: Error) => void) {
   const db = getRealtimeDb();
   if (!db) return () => {};
 
@@ -46,7 +46,7 @@ export function subscribeToReadings(callback: (readings: any[]) => void, errorCa
 
     const unsubscribe = onValue(readingsQuery, 
       (snapshot) => {
-        const readings: any[] = [];
+        const readings: Array<{ id?: string; timestamp: number; gateId: string; level: number; risk: "low" | "medium" | "high" }> = [];
         snapshot.forEach((childSnapshot) => {
           readings.push({
             id: childSnapshot.key,

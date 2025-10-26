@@ -2,6 +2,7 @@
 import styles from "./page.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { subscribeToReadings } from "@/lib/firebaseClient";
+import Image from "next/image";
 import {
   LineChart,
   Line,
@@ -40,13 +41,13 @@ export default function Home() {
         if (!res.ok) throw new Error('Failed');
         const w: Weather = await res.json();
         setWeather(w);
-      } catch (e) {
+      } catch {
         // keep previous weather on failure
       }
     };
 
     // Subscribe to readings from Realtime Database
-    let unsubscribe = subscribeToReadings(
+    const unsubscribe = subscribeToReadings(
       (list) => {
         console.log('Realtime Database data received:', {
           count: list.length,
@@ -97,13 +98,16 @@ export default function Home() {
   }, [weather]);
 
   const chartData = useMemo(() => {
-    const byTime = new Map<number, {
+    type ChartDataPoint = {
       label: string;
-      gate1Out?: number; gate1OutRisk?: "low" | "medium" | "high";
-      gate1In?: number;  gate1InRisk?: "low" | "medium" | "high";
-      gate3Out?: number; gate3OutRisk?: "low" | "medium" | "high";
-    }>();
-    const now = Date.now();
+      gate1Out?: number; 
+      gate1OutRisk?: "low" | "medium" | "high";
+      gate1In?: number;  
+      gate1InRisk?: "low" | "medium" | "high";
+      gate3Out?: number; 
+      gate3OutRisk?: "low" | "medium" | "high";
+    };
+    const byTime = new Map<number, ChartDataPoint>();
     const labelFor = (ts: number) => {
       const date = new Date(ts);
       const hours = date.getHours().toString().padStart(2, '0');
@@ -120,11 +124,19 @@ export default function Home() {
 
     for (const r of readings) {
       const key = Math.floor(r.timestamp / 60000) * 60000;
-      const ex = byTime.get(key) ?? { label: labelFor(r.timestamp) } as any;
+      const ex = byTime.get(key) ?? { label: labelFor(r.timestamp) };
       const name = nameFor(r.gateId);
       if (name) {
-        (ex as any)[name] = r.level;
-        (ex as any)[`${name}Risk`] = r.risk;
+        if (name === 'gate1Out') {
+          ex.gate1Out = r.level;
+          ex.gate1OutRisk = r.risk;
+        } else if (name === 'gate1In') {
+          ex.gate1In = r.level;
+          ex.gate1InRisk = r.risk;
+        } else if (name === 'gate3Out') {
+          ex.gate3Out = r.level;
+          ex.gate3OutRisk = r.risk;
+        }
       }
       byTime.set(key, ex);
     }
@@ -138,9 +150,8 @@ export default function Home() {
   }, [readings]);
 
   const recentLevel = recent?.level ?? 0;
-  const riskLabel = recent?.risk ?? "low";
 
-  const RiskDot = (props: any & { riskKey: string }) => {
+  const RiskDot = (props: { cx?: number; cy?: number; payload?: Record<string, unknown>; riskKey: string }) => {
     const { cx, cy, payload, riskKey } = props;
     const risk = payload?.[riskKey] as ("low" | "medium" | "high" | undefined);
     const fill = risk === "high"
@@ -158,13 +169,13 @@ export default function Home() {
     <div className={styles.page}>
       <div className={styles.brandTopRight}>
         {/* Logo and titles at the upper-right */}
-        <img src="/logobaha.jpg" alt="Logo" className={styles.brandLogo} />
+        <Image src="/logobaha.jpg" alt="Logo" className={styles.brandLogo} width={100} height={100} />
         <div className={styles.brandText}>
           <div className={styles.brandTitle}>H2OBSERVER</div>
           <div className={styles.brandSubtitle}>A HELP TO OBESERVE</div>
         </div>
       </div>
-      <img src="/logos.jpg" alt="Brand" className={styles.cornerRightLogo} />
+      <Image src="/logos.jpg" alt="Brand" className={styles.cornerRightLogo} width={200} height={100} />
       <div className={styles.leftRibbon}>
         <span className={styles.leftRibbonMain}>OBSERVE · PREPARE · RESPOND</span>
         <span className={styles.leftRibbonSub}>A FLOOD DETECTION SYSTEM TO HELP OBSERVE RISING WATER LEVELS</span>
@@ -173,7 +184,7 @@ export default function Home() {
         <div className={styles.headerRow}>
           <div className={`${styles.card} ${styles.weatherCard}`}>
             <div className={styles.cardHeader}>
-              <img src="/pin.png" alt="Location" className={styles.pinIcon} />
+              <Image src="/pin.png" alt="Location" className={styles.pinIcon} width={20} height={20} />
               <span className={styles.weatherTitle}>WEATHER</span>
             </div>
             <div className={styles.weatherBody}>

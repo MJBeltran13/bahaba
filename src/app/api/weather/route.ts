@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+// import { NextRequest } from 'next/server';
 
 // Use Open-Meteo to provide live weather for Batangas State University (approx coords)
 // https://open-meteo.com/en/docs
@@ -66,13 +66,13 @@ export async function GET() {
     };
 
     return Response.json(payload);
-  } catch (err) {
+  } catch {
     return new Response('Unexpected error fetching weather', { status: 500 });
   }
 }
 
 // Retain POST signature for compatibility, but disable writing
-export async function POST(_req: NextRequest) {
+export async function POST() {
   return new Response('POST not supported for live weather', { status: 405 });
 }
 
